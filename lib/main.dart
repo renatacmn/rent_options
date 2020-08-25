@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rentoptions/apartment_list/apartment_list_page.dart';
 
-void main() {
+void main() async {
   runApp(MyApp());
 }
 
@@ -10,12 +10,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Rent Options',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.teal,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-        textTheme: TextTheme(
-          bodyText2: TextStyle(color: Colors.white),
-        ),
       ),
       home: ApartmentListPage(),
     );

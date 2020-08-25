@@ -1,4 +1,4 @@
-import 'package:rentoptions/apartment_list/apartment.dart';
+import 'package:rentoptions/models/apartment.dart';
 
 final List<Apartment> hardcodedApartmentList = [
   Apartment(
