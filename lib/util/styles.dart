@@ -10,9 +10,4 @@ class Styles {
       Color(0xffdacce8),
     ],
   );
-
-  static const backgroundImage = DecorationImage(
-    image: AssetImage('assets/background.jpg'),
-    fit: BoxFit.cover,
-  );
 }
