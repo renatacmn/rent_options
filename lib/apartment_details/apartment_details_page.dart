@@ -1,12 +1,13 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:rentoptions/apartment_details/widgets/custom_text_field.dart';
-import 'package:rentoptions/apartment_list/widgets/apartment_list_item.dart';
 import 'package:rentoptions/data/spreadsheet_manager.dart';
 import 'package:rentoptions/models/apartment.dart';
 import 'package:rentoptions/network/requests.dart';
+import 'package:rentoptions/util/styles.dart';
 import 'package:rentoptions/util/toast_util.dart';
-import 'package:rentoptions/util/url_util.dart';
+import 'package:rentoptions/widgets/apartment_info.dart';
+import 'package:rentoptions/widgets/custom_text_field.dart';
+import 'package:rentoptions/widgets/image_carousel.dart';
+import 'package:rentoptions/widgets/translucent_card.dart';
 
 class ApartmentDetailsPage extends StatefulWidget {
   final Apartment apartment;
@@ -21,21 +22,26 @@ class ApartmentDetailsPage extends StatefulWidget {
 class _ApartmentDetailsPageState extends State<ApartmentDetailsPage> {
   final int _rowNumber;
 
-  List<String> sections = [];
-  List<String> currentData = [];
-  List<TextEditingController> controllers = [];
+  List<String> _sections = [];
+  List<String> _currentData = [];
+  List<TextEditingController> _controllers = [];
   bool _showLoadingProgressIndicator = true;
   bool _showSavingProgressIndicator = false;
-  Future<List<String>> futureHomeImages;
+  bool _isInEditMode = false;
+
+  Future<List<String>> _futureHomeImages;
 
   _ApartmentDetailsPageState(this._rowNumber);
 
   void _saveData() async {
     setState(() => _showSavingProgressIndicator = true);
     List<String> data = [];
-    controllers.forEach((controller) => data.add(controller.text));
+    _controllers.forEach((controller) => data.add(controller.text));
     await SpreadsheetManager.instance.saveNotesDataInRow(_rowNumber, data);
-    setState(() => _showSavingProgressIndicator = false);
+    setState(() {
+      _showSavingProgressIndicator = false;
+      _isInEditMode = false;
+    });
     showShortToast(context, 'Saved!');
   }
 
@@ -56,37 +62,35 @@ class _ApartmentDetailsPageState extends State<ApartmentDetailsPage> {
   }
 
   void _fetchPictures() {
-    futureHomeImages = fetchImageUrls(widget.apartment.id);
+    _futureHomeImages = fetchImageUrls(widget.apartment.id);
   }
 
   Future _initSections() async {
     print('Initializing form sections...');
-    sections = await SpreadsheetManager.instance.fetchNotesSections();
-    print(sections);
+    _sections = await SpreadsheetManager.instance.fetchNotesSections();
   }
 
   Future _initCurrentData() async {
     print('Fetching current data...');
-    currentData =
+    _currentData =
         await SpreadsheetManager.instance.fetchNotesDataFromRow(_rowNumber);
-    print(currentData);
   }
 
   void _initControllers() {
     print('Initializing controllers...');
-    for (int i = 0; i < sections.length; i++) {
+    for (int i = 0; i < _sections.length; i++) {
       var controller = TextEditingController();
       try {
-        controller.text = currentData[i];
+        controller.text = _currentData[i];
       } finally {
-        controllers.add(controller);
+        _controllers.add(controller);
       }
     }
   }
 
   @override
   void dispose() {
-    controllers.forEach((controller) {
+    _controllers.forEach((controller) {
       controller.dispose();
     });
     super.dispose();
@@ -94,68 +98,89 @@ class _ApartmentDetailsPageState extends State<ApartmentDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
+    Widget appBarAction;
+    if (_isInEditMode) {
+      appBarAction = IconButton(
+        icon: Icon(Icons.save_alt),
+        onPressed: _saveData,
+      );
+    } else {
+      appBarAction = IconButton(
+        icon: Icon(Icons.edit),
+        onPressed: () {
+          setState(() => _isInEditMode = true);
+        },
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.apartment.address),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.open_in_new),
-            onPressed: () => openUrl(context, widget.apartment.url),
-          ),
-        ],
+        actions: [appBarAction],
       ),
       body: _showLoadingProgressIndicator
           ? Center(child: CircularProgressIndicator())
-          : _buildForm(),
+          : _buildBody(),
+    );
+  }
+
+  Widget _buildBody() {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      decoration: BoxDecoration(
+        gradient: Styles.backgroundGradient,
+      ),
+      clipBehavior: Clip.antiAliasWithSaveLayer,
+      child: TranslucentCard(child: _buildForm()),
     );
   }
 
   Widget _buildForm() {
     List<Widget> children = [
-      FutureBuilder(
-          future: futureHomeImages,
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              List<String> imageUrls = snapshot.data;
-              return CarouselSlider(
-                  items: imageUrls
-                      .map(
-                        (url) => Container(
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: NetworkImage(url),
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                      )
-                      .toList());
-            } else {
-              return Container();
-            }
-          }),
-      ApartmentListItem(apartment: widget.apartment),
+      ApartmentInfo(apartment: widget.apartment),
       SizedBox(height: 24),
+      Divider(),
     ];
 
-    for (int i = 0; i < sections.length; i++) {
+    for (int i = 0; i < _sections.length; i++) {
       children.add(CustomTextFieldWithLabel(
-        label: sections[i],
-        controller: controllers[i],
+        label: _sections[i],
+        isEnabled: _isInEditMode,
+        controller: _controllers[i],
       ));
     }
 
-    children.add(_buildButton());
+    if (_isInEditMode) {
+      children.add(_buildButton());
+    }
 
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: children,
-        ),
+    return SingleChildScrollView(
+      physics: BouncingScrollPhysics(),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: 16),
+          _buildCarousel(),
+          SizedBox(height: 16),
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(children: children),
+          ),
+        ],
       ),
     );
+  }
+
+  Widget _buildCarousel() {
+    return FutureBuilder(
+        future: _futureHomeImages,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return ImageCarousel(imageUrls: snapshot.data);
+          } else {
+            return Center(child: CircularProgressIndicator());
+          }
+        });
   }
 
   Widget _buildButton() {

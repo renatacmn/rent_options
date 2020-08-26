@@ -1,70 +1,21 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:rentoptions/apartment_details/apartment_details_page.dart';
 import 'package:rentoptions/models/apartment.dart';
 import 'package:rentoptions/util/url_util.dart';
+import 'package:rentoptions/widgets/price_container.dart';
 
-class ApartmentListItem extends StatelessWidget {
-  final Color iconColor = Colors.teal;
-  final Color furnishedIconColor = Colors.teal;
-  final Color unfurnishedIconColor = Colors.redAccent;
-  final Color textColor = Colors.black87;
+class ApartmentInfo extends StatelessWidget {
+  static const Color iconColor = Colors.teal;
+  static const Color furnishedIconColor = Colors.teal;
+  static const Color unfurnishedIconColor = Colors.redAccent;
+  static const Color textColor = Colors.black87;
 
   final Apartment apartment;
 
-  const ApartmentListItem({this.apartment});
+  const ApartmentInfo({this.apartment});
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      child: _buildCard(context),
-      onTap: () => Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ApartmentDetailsPage(
-            apartment: apartment,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildCard(BuildContext context) {
-    return Card(
-      margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
-      clipBehavior: Clip.antiAliasWithSaveLayer,
-      color: Colors.white,
-      child: Column(
-        children: [
-          Container(
-            margin: const EdgeInsets.all(12),
-            width: double.infinity,
-            height: 200,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(8),
-                topRight: Radius.circular(8),
-              ),
-              boxShadow: [BoxShadow(blurRadius: 2, color: Colors.black26)],
-              image: DecorationImage(
-                image: NetworkImage(apartment.imageUrl),
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(12),
-            child: _buildApartmentInfo(context),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Column _buildApartmentInfo(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -90,12 +41,7 @@ class ApartmentListItem extends StatelessWidget {
           child: _buildTitle(context, apartment),
         ),
         SizedBox(width: 16),
-        Container(
-          padding: const EdgeInsets.all(4),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(4),
-            color: Colors.deepPurple,
-          ),
+        PriceContainer(
           child: Text(
             '${apartment.price} SEK',
             style: Theme.of(context).textTheme.subtitle2.copyWith(

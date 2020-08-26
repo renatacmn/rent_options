@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:rentoptions/apartment_list/apartment_list_page.dart';
 
 void main() async {
@@ -14,17 +15,21 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.teal,
         primaryColor: Color(0xff78cabc),
+        accentColor: Colors.deepPurple,
         appBarTheme: AppBarTheme.of(context).copyWith(
           brightness: Brightness.dark,
           iconTheme: IconTheme.of(context).copyWith(
             color: Colors.white,
           ),
           textTheme: TextTheme(
-            headline6: Theme.of(context).textTheme.headline6.copyWith(
+            headline6: GoogleFonts.quicksandTextTheme().headline6.copyWith(
                   color: Colors.white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
                 ),
           ),
         ),
+        textTheme: GoogleFonts.quicksandTextTheme(),
       ),
       home: ApartmentListPage(),
     );

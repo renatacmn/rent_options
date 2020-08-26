@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:rentoptions/apartment_list/widgets/apartment_list_item.dart';
 import 'package:rentoptions/data/spreadsheet_manager.dart';
 import 'package:rentoptions/models/apartment.dart';
+import 'package:rentoptions/util/styles.dart';
 import 'package:rentoptions/util/toast_util.dart';
+import 'package:rentoptions/widgets/apartment_list_item.dart';
 
 class ApartmentListPage extends StatefulWidget {
   @override
@@ -44,15 +45,7 @@ class _ApartmentListPageState extends State<ApartmentListPage> {
       ),
       body: Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topRight,
-            end: Alignment.bottomLeft,
-            stops: [0.2, 0.8],
-            colors: [
-              Color(0xff78cabc),
-              Color(0xff6bb4a7),
-            ],
-          ),
+          gradient: Styles.backgroundGradient,
         ),
         child: _loading
             ? Center(child: CircularProgressIndicator())
@@ -63,6 +56,8 @@ class _ApartmentListPageState extends State<ApartmentListPage> {
 
   Widget _buildListView() {
     return ListView.builder(
+      physics: BouncingScrollPhysics(),
+      padding: const EdgeInsets.symmetric(vertical: 8),
       itemCount: _apartmentList.length,
       itemBuilder: (context, position) =>
           ApartmentListItem(apartment: _apartmentList[position]),

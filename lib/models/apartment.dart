@@ -28,7 +28,6 @@ class Apartment {
   });
 
   static Apartment fromRow(List<String> row) {
-    print(row);
     if (row.length != 12) return null;
     return Apartment(
       listOrder: int.parse(row[0]),
