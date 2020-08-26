@@ -1,8 +1,10 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:rentoptions/apartment_details/widgets/custom_text_field.dart';
 import 'package:rentoptions/apartment_list/widgets/apartment_list_item.dart';
 import 'package:rentoptions/data/spreadsheet_manager.dart';
 import 'package:rentoptions/models/apartment.dart';
+import 'package:rentoptions/network/requests.dart';
 import 'package:rentoptions/util/toast_util.dart';
 import 'package:rentoptions/util/url_util.dart';
 
@@ -24,6 +26,7 @@ class _ApartmentDetailsPageState extends State<ApartmentDetailsPage> {
   List<TextEditingController> controllers = [];
   bool _showLoadingProgressIndicator = true;
   bool _showSavingProgressIndicator = false;
+  Future<List<String>> futureHomeImages;
 
   _ApartmentDetailsPageState(this._rowNumber);
 
@@ -40,6 +43,7 @@ class _ApartmentDetailsPageState extends State<ApartmentDetailsPage> {
   void initState() {
     super.initState();
     _initForm();
+    _fetchPictures();
   }
 
   Future _initForm() async {
@@ -49,6 +53,10 @@ class _ApartmentDetailsPageState extends State<ApartmentDetailsPage> {
     _initControllers();
     print('Form initialized!');
     setState(() => _showLoadingProgressIndicator = false);
+  }
+
+  void _fetchPictures() {
+    futureHomeImages = fetchImageUrls(widget.apartment.id);
   }
 
   Future _initSections() async {
@@ -104,6 +112,28 @@ class _ApartmentDetailsPageState extends State<ApartmentDetailsPage> {
 
   Widget _buildForm() {
     List<Widget> children = [
+      FutureBuilder(
+          future: futureHomeImages,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              List<String> imageUrls = snapshot.data;
+              return CarouselSlider(
+                  items: imageUrls
+                      .map(
+                        (url) => Container(
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: NetworkImage(url),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                      )
+                      .toList());
+            } else {
+              return Container();
+            }
+          }),
       ApartmentListItem(apartment: widget.apartment),
       SizedBox(height: 24),
     ];
