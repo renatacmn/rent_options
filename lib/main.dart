@@ -13,6 +13,18 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.teal,
+        primaryColor: Color(0xff78cabc),
+        appBarTheme: AppBarTheme.of(context).copyWith(
+          brightness: Brightness.dark,
+          iconTheme: IconTheme.of(context).copyWith(
+            color: Colors.white,
+          ),
+          textTheme: TextTheme(
+            headline6: Theme.of(context).textTheme.headline6.copyWith(
+                  color: Colors.white,
+                ),
+          ),
+        ),
       ),
       home: ApartmentListPage(),
     );

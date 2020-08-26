@@ -32,6 +32,7 @@ class _ApartmentListPageState extends State<ApartmentListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.transparent,
       appBar: AppBar(
         title: Text('Rent Options'),
         actions: [
@@ -41,13 +42,30 @@ class _ApartmentListPageState extends State<ApartmentListPage> {
           ),
         ],
       ),
-      body: _loading
-          ? Center(child: CircularProgressIndicator())
-          : ListView.builder(
-              itemCount: _apartmentList.length,
-              itemBuilder: (context, position) =>
-                  ApartmentListItem(apartment: _apartmentList[position]),
-            ),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topRight,
+            end: Alignment.bottomLeft,
+            stops: [0.2, 0.8],
+            colors: [
+              Color(0xff78cabc),
+              Color(0xff6bb4a7),
+            ],
+          ),
+        ),
+        child: _loading
+            ? Center(child: CircularProgressIndicator())
+            : _buildListView(),
+      ),
+    );
+  }
+
+  Widget _buildListView() {
+    return ListView.builder(
+      itemCount: _apartmentList.length,
+      itemBuilder: (context, position) =>
+          ApartmentListItem(apartment: _apartmentList[position]),
     );
   }
 }
