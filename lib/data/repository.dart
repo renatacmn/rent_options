@@ -7,7 +7,7 @@ class Repository {
   List<Status> _statusList;
   List<Apartment> _apartmentList;
   List<String> _notesSections;
-  List<String> _currentNotes;
+  Map<int, List<String>> _notesMap = Map();
   Map<String, List<String>> _imagesMap = Map();
 
   static final Repository _instance = Repository._privateConstructor();
@@ -20,7 +20,7 @@ class Repository {
     _statusList = null;
     _apartmentList = null;
     _notesSections = null;
-    _currentNotes = null;
+    _notesMap = Map();
     _imagesMap = Map();
   }
 
@@ -51,15 +51,15 @@ class Repository {
   }
 
   Future<List<String>> fetchNotesDataFromRow(int row) async {
-    if (_currentNotes == null) {
-      _currentNotes =
-          await SpreadsheetManager.instance.fetchNotesDataFromRow(row);
+    if (!_notesMap.containsKey(row)) {
+      var notes = await SpreadsheetManager.instance.fetchNotesDataFromRow(row);
+      _notesMap[row] = notes;
     }
-    return _currentNotes;
+    return _notesMap[row];
   }
 
   Future saveNotesDataInRow(int rowNumber, List<String> row) async {
-    _currentNotes = row;
+    _notesMap[rowNumber] = row;
     await SpreadsheetManager.instance.saveNotesDataInRow(rowNumber, row);
   }
 

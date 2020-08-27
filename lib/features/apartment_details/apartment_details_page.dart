@@ -87,6 +87,8 @@ class _ApartmentDetailsPageState extends State<ApartmentDetailsPage> {
       var controller = TextEditingController();
       try {
         controller.text = _currentData[i];
+      } catch (e) {
+        // No op
       } finally {
         _controllers.add(controller);
       }
