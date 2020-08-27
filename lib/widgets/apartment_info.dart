@@ -20,8 +20,7 @@ class ApartmentInfo extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        StatusIndicator(status: apartment.status),
-        SizedBox(height: 16),
+        _buildStatus(apartment),
         _buildTitleRow(context, apartment),
         SizedBox(height: 16),
         _buildFurnished(apartment.furnished),
@@ -32,6 +31,16 @@ class ApartmentInfo extends StatelessWidget {
         _buildObservations(apartment.observations),
         _buildTags(apartment.tags),
       ],
+    );
+  }
+
+  Widget _buildStatus(Apartment apartment) {
+    if (apartment.status == null) {
+      return Container();
+    }
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: StatusIndicator(status: apartment.status),
     );
   }
 

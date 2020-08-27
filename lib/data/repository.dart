@@ -66,7 +66,6 @@ class Repository {
   Future<List<String>> fetchApartmentImages(String id) async {
     if (!_imagesMap.containsKey(id)) {
       var images = await Network.fetchApartmentImages(id);
-      print(images);
       _imagesMap[id] = images;
     }
     return Future.value(_imagesMap[id]);
@@ -75,8 +74,11 @@ class Repository {
   void _setApartmentStatusColor() {
     if (_apartmentList?.isNotEmpty == true && _statusList?.isNotEmpty == true) {
       _apartmentList.forEach((apartment) {
-        var foundStatus = _statusList
-            .firstWhere((status) => status?.name == apartment?.status?.name);
+        var foundStatus = _statusList.firstWhere((status) {
+          return status?.name == apartment?.status?.name;
+        }, orElse: () {
+          return null;
+        });
         if (foundStatus != null) {
           apartment.status.color = foundStatus.color;
         }

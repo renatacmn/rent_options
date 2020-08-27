@@ -80,7 +80,7 @@ class _ApartmentListPageState extends State<ApartmentListPage> {
       filteredApartmentList = _apartmentList;
     } else {
       filteredApartmentList = _apartmentList.where((apartment) {
-        return apartment.status.name == statusName;
+        return apartment.status?.name == statusName;
       }).toList();
     }
 

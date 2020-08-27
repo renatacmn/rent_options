@@ -1,4 +1,5 @@
 import 'package:rentoptions/models/status.dart';
+import 'package:rentoptions/util/extensions.dart';
 
 class Apartment {
   final int listOrder;
@@ -32,21 +33,24 @@ class Apartment {
   });
 
   static Apartment fromRow(List<String> row) {
-    if (row.length != 13) return null;
     return Apartment(
-      listOrder: int.parse(row[0]),
-      id: row[1],
-      url: row[2],
-      imageUrl: row[3],
-      address: row[4],
-      price: int.parse(row[5]),
-      size: int.parse(row[6]),
-      numRooms: double.parse(row[7]),
-      distanceRange: row[8].split(',').map((e) => (int.parse(e))).toList(),
-      furnished: row[9] == 'Yes' ? true : false,
-      observations: row[10] == '-' ? null : row[10],
-      tags: row[11] == '-' ? null : row[11].split(','),
-      status: Status(name: row[12]),
+      listOrder: row.getOrNull(0)?.toInt(),
+      id: row.getOrNull(1),
+      url: row.getOrNull(2),
+      imageUrl: row.getOrNull(3),
+      address: row.getOrNull(4),
+      price: row.getOrNull(5)?.toInt(),
+      size: row.getOrNull(6)?.toInt(),
+      numRooms: row.getOrNull(7)?.toDouble(),
+      distanceRange:
+          row.getOrNull(8)?.split(',')?.map((e) => (e.toInt()))?.toList(),
+      furnished: row.getOrNull(9) == 'Yes' ? true : false,
+      observations: row.getOrNull(10),
+      tags: row.getOrNull(11)?.split(','),
+      status: Status.fromValues(
+        name: row.getOrNull(12),
+        notes: row.getOrNull(13),
+      ),
     );
   }
 }
