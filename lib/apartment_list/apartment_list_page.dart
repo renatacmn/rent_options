@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rentoptions/data/spreadsheet_manager.dart';
 import 'package:rentoptions/models/apartment.dart';
+import 'package:rentoptions/models/status.dart';
 import 'package:rentoptions/util/styles.dart';
 import 'package:rentoptions/util/toast_util.dart';
 import 'package:rentoptions/widgets/apartment_list_item.dart';
@@ -11,7 +12,7 @@ class ApartmentListPage extends StatefulWidget {
 }
 
 class _ApartmentListPageState extends State<ApartmentListPage> {
-  List<String> _statusList = [];
+  List<Status> _statusList = [];
   List<Apartment> _apartmentList = [];
   bool _loading = true;
 
@@ -29,13 +30,28 @@ class _ApartmentListPageState extends State<ApartmentListPage> {
     await SpreadsheetManager.instance.initSpreadsheet();
     _statusList = await SpreadsheetManager.instance.fetchStatusList();
     _apartmentList = await SpreadsheetManager.instance.fetchApartmentList();
+    _setApartmentStatusColor();
     setState(() => _loading = false);
+  }
+
+  void _setApartmentStatusColor() {
+    print(_apartmentList);
+    print(_statusList);
+    if (_apartmentList?.isNotEmpty == true && _statusList?.isNotEmpty == true) {
+      _apartmentList.forEach((apartment) {
+        var foundStatus = _statusList
+            .firstWhere((status) => status?.name == apartment?.status?.name);
+        if (foundStatus != null) {
+          apartment.status.color = foundStatus.color;
+        }
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     List<Tab> tabs = [Tab(text: 'All')];
-    tabs.addAll(_statusList.map((status) => Tab(text: status)).toList());
+    tabs.addAll(_statusList.map((status) => Tab(text: status.name)).toList());
 
     return DefaultTabController(
       length: tabs.length,
@@ -61,24 +77,24 @@ class _ApartmentListPageState extends State<ApartmentListPage> {
     );
   }
 
-  Widget _buildBody(String status) {
+  Widget _buildBody(String statusName) {
     return Container(
       decoration: BoxDecoration(
         gradient: Styles.backgroundGradient,
       ),
       child: _loading
           ? Center(child: CircularProgressIndicator())
-          : _buildListView(status),
+          : _buildListView(statusName),
     );
   }
 
-  Widget _buildListView(String status) {
+  Widget _buildListView(String statusName) {
     var filteredApartmentList = [];
-    if (status == 'All') {
+    if (statusName == 'All') {
       filteredApartmentList = _apartmentList;
     } else {
       filteredApartmentList = _apartmentList.where((apartment) {
-        return apartment.status == status;
+        return apartment.status.name == statusName;
       }).toList();
     }
 

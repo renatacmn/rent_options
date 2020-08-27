@@ -1,3 +1,5 @@
+import 'package:rentoptions/models/status.dart';
+
 class Apartment {
   final int listOrder;
   final String id;
@@ -11,7 +13,7 @@ class Apartment {
   final bool furnished;
   final String observations;
   final List<String> tags;
-  final String status;
+  final Status status;
 
   Apartment({
     this.id,
@@ -44,7 +46,7 @@ class Apartment {
       furnished: row[9] == 'Yes' ? true : false,
       observations: row[10] == '-' ? null : row[10],
       tags: row[11] == '-' ? null : row[11].split(','),
-      status: row[12],
+      status: Status(name: row[12]),
     );
   }
 }

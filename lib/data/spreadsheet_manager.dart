@@ -1,6 +1,7 @@
 import 'package:gsheets/gsheets.dart';
 import 'package:rentoptions/data/google_api_credentials.dart';
 import 'package:rentoptions/models/apartment.dart';
+import 'package:rentoptions/models/status.dart';
 
 const _spreadsheetId = '1irQHqJNH7G--zEWCS3s_CuRpYdtcHHwGj2DbKMnefk0';
 
@@ -19,9 +20,12 @@ class SpreadsheetManager {
     _spreadsheet = await gSheets.spreadsheet(_spreadsheetId);
   }
 
-  Future<List<String>> fetchStatusList() async {
+  Future<List<Status>> fetchStatusList() async {
     var worksheet = _spreadsheet.worksheetByTitle('Status');
-    return await worksheet.values.row(1);
+    var rows = await worksheet.values.allRows();
+    return rows.map((row) {
+      return Status(name: row[0], color: row[1]);
+    }).toList();
   }
 
   Future<List<Apartment>> fetchApartmentList() async {

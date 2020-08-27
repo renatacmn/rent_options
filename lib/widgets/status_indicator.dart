@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:rentoptions/models/status.dart';
 
 class StatusIndicator extends StatelessWidget {
-  final String status;
+  final Status status;
 
   const StatusIndicator({@required this.status});
 
@@ -13,10 +14,12 @@ class StatusIndicator extends StatelessWidget {
       alignment: Alignment.center,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(4),
-        color: Colors.teal,
+        color: status.color.isNotEmpty
+            ? Color(int.parse(status.color))
+            : Colors.teal,
       ),
       child: Text(
-        status,
+        status.name,
         style: TextStyle(
           color: Colors.white,
           fontWeight: FontWeight.bold,
