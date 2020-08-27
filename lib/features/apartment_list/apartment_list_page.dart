@@ -29,9 +29,17 @@ class _ApartmentListPageState extends State<ApartmentListPage> {
 
   Future _initData() async {
     await _repository.init();
-    _statusList = await _repository.fetchStatusList();
-    _apartmentList = await _repository.fetchApartmentList();
+    await _loadData();
     setState(() => _loading = false);
+  }
+
+  Future _loadData() async {
+    var statusList = await _repository.fetchStatusList();
+    var apartmentList = await _repository.fetchApartmentList();
+    setState(() {
+      _statusList = statusList;
+      _apartmentList = apartmentList;
+    });
   }
 
   @override
@@ -64,13 +72,19 @@ class _ApartmentListPageState extends State<ApartmentListPage> {
   }
 
   Widget _buildBody(String statusName) {
-    return Container(
-      decoration: BoxDecoration(
-        gradient: Styles.backgroundGradient,
+    return RefreshIndicator(
+      onRefresh: () {
+        _repository.reset();
+        return _loadData();
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: Styles.backgroundGradient,
+        ),
+        child: _loading
+            ? Center(child: CircularProgressIndicator())
+            : _buildListView(statusName),
       ),
-      child: _loading
-          ? Center(child: CircularProgressIndicator())
-          : _buildListView(statusName),
     );
   }
 
