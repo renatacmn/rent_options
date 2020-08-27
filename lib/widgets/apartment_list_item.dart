@@ -38,14 +38,16 @@ class ApartmentListItem extends StatelessWidget {
 
   Widget _buildImage() {
     return Container(
-      margin: const EdgeInsets.all(12),
+      margin: const EdgeInsets.only(
+        top: 16,
+        left: 20,
+        right: 20,
+        bottom: 8,
+      ),
       width: double.infinity,
       height: 200,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(8),
-          topRight: Radius.circular(8),
-        ),
+        borderRadius: BorderRadius.all(Radius.circular(16)),
         boxShadow: [BoxShadow(blurRadius: 2, color: Colors.black26)],
         image: DecorationImage(
           image: CachedNetworkImageProvider(apartment.imageUrl),
@@ -57,7 +59,7 @@ class ApartmentListItem extends StatelessWidget {
 
   Widget _buildApartmentInfo() {
     return Padding(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(16),
       child: ApartmentInfo(apartment: apartment),
     );
   }

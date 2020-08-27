@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rentoptions/data/repository.dart';
+import 'package:rentoptions/main.dart';
 import 'package:rentoptions/models/apartment.dart';
 import 'package:rentoptions/util/styles.dart';
 import 'package:rentoptions/util/toast_util.dart';
@@ -34,20 +35,49 @@ class _ApartmentDetailsPageState extends State<ApartmentDetailsPage> {
 
   _ApartmentDetailsPageState(this._rowNumber);
 
+  void _onSavePressed() async {
+    if (demoVersion) {
+      _showDemoDialog();
+    } else {
+      _saveData();
+    }
+  }
+
+  void _showDemoDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Demo version'),
+          content:
+              Text('This is a demo version, the changes will not be saved. ;)'),
+          actions: [
+            FlatButton(
+              child: Text('Ok'),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ],
+        );
+      },
+    ).then((value) => _setReadOnlyMode());
+  }
+
   void _saveData() async {
     setState(() => _showSavingProgressIndicator = true);
 
-    // Save data
     List<String> data = [];
     _controllers.forEach((controller) => data.add(controller.text));
     await _repository.saveNotesDataInRow(_rowNumber, data);
 
-    // Back to read-only mode
+    _setReadOnlyMode();
+    showShortToast(context, 'Saved!');
+  }
+
+  void _setReadOnlyMode() {
     setState(() {
       _showSavingProgressIndicator = false;
       _isInEditMode = false;
     });
-    showShortToast(context, 'Saved!');
   }
 
   @override
@@ -109,7 +139,7 @@ class _ApartmentDetailsPageState extends State<ApartmentDetailsPage> {
     if (_isInEditMode) {
       appBarAction = IconButton(
         icon: Icon(Icons.save_alt),
-        onPressed: _saveData,
+        onPressed: _onSavePressed,
       );
     } else {
       appBarAction = IconButton(
@@ -150,7 +180,7 @@ class _ApartmentDetailsPageState extends State<ApartmentDetailsPage> {
         children: [
           SizedBox(height: 16),
           _buildCarousel(),
-          SizedBox(height: 16),
+          SizedBox(height: 8),
           Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
@@ -212,7 +242,7 @@ class _ApartmentDetailsPageState extends State<ApartmentDetailsPage> {
                 style: TextStyle(color: Colors.white),
               ),
         color: Colors.teal,
-        onPressed: _saveData,
+        onPressed: _onSavePressed,
       ),
     );
   }
