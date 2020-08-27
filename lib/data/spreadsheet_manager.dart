@@ -14,15 +14,20 @@ class SpreadsheetManager {
 
   SpreadsheetManager._privateConstructor();
 
-  Future<void> initSpreadsheet() async {
+  Future initSpreadsheet() async {
     final gSheets = GSheets(credentials);
     _spreadsheet = await gSheets.spreadsheet(_spreadsheetId);
+  }
+
+  Future<List<String>> fetchStatusList() async {
+    var worksheet = _spreadsheet.worksheetByTitle('Status');
+    return await worksheet.values.row(1);
   }
 
   Future<List<Apartment>> fetchApartmentList() async {
     var worksheet = _spreadsheet.worksheetByTitle('Apartments');
     var rows = await worksheet.values.allRows();
-    rows.removeAt(0);
+    rows.removeAt(0); // Remove headers
     return rows
         .map((row) => Apartment.fromRow(row))
         .where((apartment) => apartment != null)
@@ -39,7 +44,7 @@ class SpreadsheetManager {
     return await worksheet.values.row(row);
   }
 
-  Future<void> saveNotesDataInRow(int rowNumber, List<String> row) async {
+  Future saveNotesDataInRow(int rowNumber, List<String> row) async {
     var worksheet = _spreadsheet.worksheetByTitle('Notes');
     await worksheet.values.insertRow(rowNumber, row);
   }

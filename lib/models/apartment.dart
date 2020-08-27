@@ -11,6 +11,7 @@ class Apartment {
   final bool furnished;
   final String observations;
   final List<String> tags;
+  final String status;
 
   Apartment({
     this.id,
@@ -25,10 +26,11 @@ class Apartment {
     this.furnished,
     this.observations,
     this.tags,
+    this.status,
   });
 
   static Apartment fromRow(List<String> row) {
-    if (row.length != 12) return null;
+    if (row.length != 13) return null;
     return Apartment(
       listOrder: int.parse(row[0]),
       id: row[1],
@@ -42,6 +44,7 @@ class Apartment {
       furnished: row[9] == 'Yes' ? true : false,
       observations: row[10] == '-' ? null : row[10],
       tags: row[11] == '-' ? null : row[11].split(','),
+      status: row[12],
     );
   }
 }

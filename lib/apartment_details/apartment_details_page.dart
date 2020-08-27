@@ -12,7 +12,7 @@ import 'package:rentoptions/widgets/translucent_card.dart';
 class ApartmentDetailsPage extends StatefulWidget {
   final Apartment apartment;
 
-  const ApartmentDetailsPage({this.apartment});
+  const ApartmentDetailsPage({@required this.apartment});
 
   @override
   _ApartmentDetailsPageState createState() =>
@@ -25,6 +25,7 @@ class _ApartmentDetailsPageState extends State<ApartmentDetailsPage> {
   List<String> _sections = [];
   List<String> _currentData = [];
   List<TextEditingController> _controllers = [];
+
   bool _showLoadingProgressIndicator = true;
   bool _showSavingProgressIndicator = false;
   bool _isInEditMode = false;
@@ -35,9 +36,13 @@ class _ApartmentDetailsPageState extends State<ApartmentDetailsPage> {
 
   void _saveData() async {
     setState(() => _showSavingProgressIndicator = true);
+
+    // Save data
     List<String> data = [];
     _controllers.forEach((controller) => data.add(controller.text));
     await SpreadsheetManager.instance.saveNotesDataInRow(_rowNumber, data);
+
+    // Back to read-only mode
     setState(() {
       _showSavingProgressIndicator = false;
       _isInEditMode = false;
@@ -53,6 +58,7 @@ class _ApartmentDetailsPageState extends State<ApartmentDetailsPage> {
   }
 
   Future _initForm() async {
+    print('Initializing form...');
     setState(() => _showLoadingProgressIndicator = true);
     await _initSections();
     await _initCurrentData();
@@ -131,29 +137,11 @@ class _ApartmentDetailsPageState extends State<ApartmentDetailsPage> {
         gradient: Styles.backgroundGradient,
       ),
       clipBehavior: Clip.antiAliasWithSaveLayer,
-      child: TranslucentCard(child: _buildForm()),
+      child: TranslucentCard(child: _buildContent()),
     );
   }
 
-  Widget _buildForm() {
-    List<Widget> children = [
-      ApartmentInfo(apartment: widget.apartment),
-      SizedBox(height: 24),
-      Divider(),
-    ];
-
-    for (int i = 0; i < _sections.length; i++) {
-      children.add(CustomTextFieldWithLabel(
-        label: _sections[i],
-        isEnabled: _isInEditMode,
-        controller: _controllers[i],
-      ));
-    }
-
-    if (_isInEditMode) {
-      children.add(_buildButton());
-    }
-
+  Widget _buildContent() {
     return SingleChildScrollView(
       physics: BouncingScrollPhysics(),
       child: Column(
@@ -164,7 +152,9 @@ class _ApartmentDetailsPageState extends State<ApartmentDetailsPage> {
           SizedBox(height: 16),
           Padding(
             padding: const EdgeInsets.all(16),
-            child: Column(children: children),
+            child: Column(
+              children: _getFormChildren(),
+            ),
           ),
         ],
       ),
@@ -181,6 +171,28 @@ class _ApartmentDetailsPageState extends State<ApartmentDetailsPage> {
             return Center(child: CircularProgressIndicator());
           }
         });
+  }
+
+  List<Widget> _getFormChildren() {
+    List<Widget> children = [
+      ApartmentInfo(apartment: widget.apartment),
+      SizedBox(height: 24),
+      Divider(color: Colors.deepPurple),
+    ];
+
+    for (int i = 0; i < _sections.length; i++) {
+      children.add(CustomTextFieldWithLabel(
+        label: _sections[i],
+        isEnabled: _isInEditMode,
+        controller: _controllers[i],
+      ));
+    }
+
+    if (_isInEditMode) {
+      children.add(_buildButton());
+    }
+
+    return children;
   }
 
   Widget _buildButton() {

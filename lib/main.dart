@@ -30,6 +30,12 @@ class MyApp extends StatelessWidget {
           ),
         ),
         textTheme: GoogleFonts.quicksandTextTheme(),
+        tabBarTheme: Theme.of(context).tabBarTheme.copyWith(
+              labelStyle: GoogleFonts.quicksand(fontWeight: FontWeight.bold),
+              unselectedLabelStyle: GoogleFonts.quicksand(),
+              labelColor: Colors.white,
+              unselectedLabelColor: Colors.teal,
+            ),
       ),
       home: ApartmentListPage(),
     );

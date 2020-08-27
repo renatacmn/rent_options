@@ -2,7 +2,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:rentoptions/models/apartment.dart';
 import 'package:rentoptions/util/url_util.dart';
-import 'package:rentoptions/widgets/price_container.dart';
+import 'package:rentoptions/widgets/price_indicator.dart';
+import 'package:rentoptions/widgets/status_indicator.dart';
 
 class ApartmentInfo extends StatelessWidget {
   static const Color iconColor = Colors.teal;
@@ -19,6 +20,8 @@ class ApartmentInfo extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        StatusIndicator(status: apartment.status),
+        SizedBox(height: 16),
         _buildTitleRow(context, apartment),
         SizedBox(height: 16),
         _buildFurnished(apartment.furnished),
@@ -37,19 +40,9 @@ class ApartmentInfo extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Flexible(
-          child: _buildTitle(context, apartment),
-        ),
+        Flexible(child: _buildTitle(context, apartment)),
         SizedBox(width: 16),
-        PriceContainer(
-          child: Text(
-            '${apartment.price} SEK',
-            style: Theme.of(context).textTheme.subtitle2.copyWith(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-          ),
-        ),
+        PriceIndicator(price: '${apartment.price} SEK'),
       ],
     );
   }
@@ -86,10 +79,7 @@ class ApartmentInfo extends StatelessWidget {
         children: [
           Icon(Icons.check, color: furnishedIconColor),
           SizedBox(width: 4),
-          Text(
-            'Furnished',
-            style: TextStyle(color: textColor),
-          ),
+          Text('Furnished', style: TextStyle(color: textColor)),
         ],
       );
     } else {
@@ -97,10 +87,7 @@ class ApartmentInfo extends StatelessWidget {
         children: [
           Icon(Icons.close, color: unfurnishedIconColor),
           SizedBox(width: 4),
-          Text(
-            'Unfurnished',
-            style: TextStyle(color: textColor),
-          ),
+          Text('Unfurnished', style: TextStyle(color: textColor)),
         ],
       );
     }
