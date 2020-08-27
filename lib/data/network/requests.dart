@@ -3,23 +3,25 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
-Future<List<String>> fetchImageUrls(String id) async {
-  final response = await http.get('https://api.qasa.se/v1/homes/$id');
+class Network {
+  static Future<List<String>> fetchApartmentImages(String id) async {
+    final response = await http.get('https://api.qasa.se/v1/homes/$id');
 
-  if (response.statusCode == 200) {
-    // If the server did return a 200 OK response,
-    // then parse the JSON.
-    return HomeResponse.fromJson(json.decode(response.body))
-        .homes
-        .first
-        .uploads
-        .where((upload) => upload.uploadType == 'home_picture')
-        .map((upload) => upload.url)
-        .toList();
-  } else {
-    // If the server did not return a 200 OK response,
-    // then throw an exception.
-    throw Exception('Failed to load home details');
+    if (response.statusCode == 200) {
+      // If the server did return a 200 OK response,
+      // then parse the JSON.
+      return HomeResponse.fromJson(json.decode(response.body))
+          .homes
+          .first
+          .uploads
+          .where((upload) => upload.uploadType == 'home_picture')
+          .map((upload) => upload.url)
+          .toList();
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      throw Exception('Failed to load home details');
+    }
   }
 }
 

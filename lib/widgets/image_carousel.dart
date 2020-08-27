@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:rentoptions/apartment_photo_view/apartment_photo_view.dart';
+import 'package:rentoptions/features/apartment_photo_view/apartment_photo_view.dart';
 
 class ImageCarousel extends StatefulWidget {
   final List<String> imageUrls;
@@ -34,6 +34,7 @@ class _ImageCarouselState extends State<ImageCarousel> {
       height: 200,
       items: items,
       viewportFraction: 0.9,
+      enableInfiniteScroll: false,
       onPageChanged: (position) => _currentPosition = position,
     );
   }

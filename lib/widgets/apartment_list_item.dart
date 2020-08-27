@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:rentoptions/apartment_details/apartment_details_page.dart';
+import 'package:rentoptions/features/apartment_details/apartment_details_page.dart';
 import 'package:rentoptions/models/apartment.dart';
 import 'package:rentoptions/widgets/apartment_info.dart';
 import 'package:rentoptions/widgets/translucent_card.dart';

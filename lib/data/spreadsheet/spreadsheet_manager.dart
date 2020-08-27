@@ -1,5 +1,5 @@
 import 'package:gsheets/gsheets.dart';
-import 'package:rentoptions/data/google_api_credentials.dart';
+import 'package:rentoptions/data/spreadsheet/google_api_credentials.dart';
 import 'package:rentoptions/models/apartment.dart';
 import 'package:rentoptions/models/status.dart';
 

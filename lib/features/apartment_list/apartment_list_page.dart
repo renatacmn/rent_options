@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rentoptions/data/spreadsheet_manager.dart';
+import 'package:rentoptions/data/repository.dart';
 import 'package:rentoptions/models/apartment.dart';
 import 'package:rentoptions/models/status.dart';
 import 'package:rentoptions/util/styles.dart';
@@ -12,6 +12,7 @@ class ApartmentListPage extends StatefulWidget {
 }
 
 class _ApartmentListPageState extends State<ApartmentListPage> {
+  final Repository _repository = Repository.instance;
   List<Status> _statusList = [];
   List<Apartment> _apartmentList = [];
   bool _loading = true;
@@ -27,25 +28,10 @@ class _ApartmentListPageState extends State<ApartmentListPage> {
   }
 
   Future _initData() async {
-    await SpreadsheetManager.instance.initSpreadsheet();
-    _statusList = await SpreadsheetManager.instance.fetchStatusList();
-    _apartmentList = await SpreadsheetManager.instance.fetchApartmentList();
-    _setApartmentStatusColor();
+    await _repository.init();
+    _statusList = await _repository.fetchStatusList();
+    _apartmentList = await _repository.fetchApartmentList();
     setState(() => _loading = false);
-  }
-
-  void _setApartmentStatusColor() {
-    print(_apartmentList);
-    print(_statusList);
-    if (_apartmentList?.isNotEmpty == true && _statusList?.isNotEmpty == true) {
-      _apartmentList.forEach((apartment) {
-        var foundStatus = _statusList
-            .firstWhere((status) => status?.name == apartment?.status?.name);
-        if (foundStatus != null) {
-          apartment.status.color = foundStatus.color;
-        }
-      });
-    }
   }
 
   @override

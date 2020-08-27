@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:rentoptions/apartment_list/apartment_list_page.dart';
+
+import 'features/apartment_list/apartment_list_page.dart';
 
 void main() async {
   runApp(MyApp());

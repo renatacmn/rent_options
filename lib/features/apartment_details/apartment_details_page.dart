@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:rentoptions/data/spreadsheet_manager.dart';
+import 'package:rentoptions/data/repository.dart';
 import 'package:rentoptions/models/apartment.dart';
-import 'package:rentoptions/network/requests.dart';
 import 'package:rentoptions/util/styles.dart';
 import 'package:rentoptions/util/toast_util.dart';
 import 'package:rentoptions/widgets/apartment_info.dart';
@@ -20,6 +19,7 @@ class ApartmentDetailsPage extends StatefulWidget {
 }
 
 class _ApartmentDetailsPageState extends State<ApartmentDetailsPage> {
+  final Repository _repository = Repository.instance;
   final int _rowNumber;
 
   List<String> _sections = [];
@@ -40,7 +40,7 @@ class _ApartmentDetailsPageState extends State<ApartmentDetailsPage> {
     // Save data
     List<String> data = [];
     _controllers.forEach((controller) => data.add(controller.text));
-    await SpreadsheetManager.instance.saveNotesDataInRow(_rowNumber, data);
+    await _repository.saveNotesDataInRow(_rowNumber, data);
 
     // Back to read-only mode
     setState(() {
@@ -68,18 +68,17 @@ class _ApartmentDetailsPageState extends State<ApartmentDetailsPage> {
   }
 
   void _fetchPictures() {
-    _futureHomeImages = fetchImageUrls(widget.apartment.id);
+    _futureHomeImages = _repository.fetchApartmentImages(widget.apartment.id);
   }
 
   Future _initSections() async {
     print('Initializing form sections...');
-    _sections = await SpreadsheetManager.instance.fetchNotesSections();
+    _sections = await _repository.fetchNotesSections();
   }
 
   Future _initCurrentData() async {
     print('Fetching current data...');
-    _currentData =
-        await SpreadsheetManager.instance.fetchNotesDataFromRow(_rowNumber);
+    _currentData = await _repository.fetchNotesDataFromRow(_rowNumber);
   }
 
   void _initControllers() {
