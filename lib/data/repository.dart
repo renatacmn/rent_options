@@ -2,12 +2,13 @@ import 'package:rentoptions/data/network/requests.dart';
 import 'package:rentoptions/data/spreadsheet/spreadsheet_manager.dart';
 import 'package:rentoptions/models/apartment.dart';
 import 'package:rentoptions/models/status.dart';
+import 'package:rentoptions/util/extensions.dart';
 
 class Repository {
   List<Status> _statusList;
   List<Apartment> _apartmentList;
   List<String> _notesSections;
-  Map<int, List<String>> _notesMap = Map();
+  Map<String, List<String>> _notesMap = Map();
   Map<String, List<String>> _imagesMap = Map();
 
   static final Repository _instance = Repository._privateConstructor();
@@ -46,21 +47,28 @@ class Repository {
   Future<List<String>> fetchNotesSections() async {
     if (_notesSections == null) {
       _notesSections = await SpreadsheetManager.instance.fetchNotesSections();
+      if (!_notesSections.isNullOrEmpty()) {
+        _notesSections.removeAt(0); // Remove ID
+      }
     }
     return _notesSections;
   }
 
-  Future<List<String>> fetchNotesDataFromRow(int row) async {
-    if (!_notesMap.containsKey(row)) {
-      var notes = await SpreadsheetManager.instance.fetchNotesDataFromRow(row);
-      _notesMap[row] = notes;
+  Future<List<String>> fetchNotesDataById(String id) async {
+    if (!_notesMap.containsKey(id)) {
+      var notes = await SpreadsheetManager.instance.fetchNotesDataById(id);
+      if (!notes.isNullOrEmpty()) {
+        notes.removeAt(0); // Remove ID
+      }
+      _notesMap[id] = notes; // Update map
     }
-    return _notesMap[row];
+    return _notesMap[id];
   }
 
-  Future saveNotesDataInRow(int rowNumber, List<String> row) async {
-    _notesMap[rowNumber] = row;
-    await SpreadsheetManager.instance.saveNotesDataInRow(rowNumber, row);
+  Future saveNotesDataById(String id, List<String> row) async {
+    row.insert(0, id); // Insert ID
+    _notesMap[id] = row; // Add to map
+    await SpreadsheetManager.instance.saveNotesDataById(id, row);
   }
 
   Future<List<String>> fetchApartmentImages(String id) async {

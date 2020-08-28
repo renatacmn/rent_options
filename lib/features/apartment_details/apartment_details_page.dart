@@ -15,13 +15,11 @@ class ApartmentDetailsPage extends StatefulWidget {
   const ApartmentDetailsPage({@required this.apartment});
 
   @override
-  _ApartmentDetailsPageState createState() =>
-      _ApartmentDetailsPageState(apartment.listOrder + 1);
+  _ApartmentDetailsPageState createState() => _ApartmentDetailsPageState();
 }
 
 class _ApartmentDetailsPageState extends State<ApartmentDetailsPage> {
   final Repository _repository = Repository.instance;
-  final int _rowNumber;
 
   List<String> _sections = [];
   List<String> _currentData = [];
@@ -32,8 +30,6 @@ class _ApartmentDetailsPageState extends State<ApartmentDetailsPage> {
   bool _isInEditMode = false;
 
   Future<List<String>> _futureHomeImages;
-
-  _ApartmentDetailsPageState(this._rowNumber);
 
   void _onSavePressed() async {
     if (demoVersion) {
@@ -67,7 +63,7 @@ class _ApartmentDetailsPageState extends State<ApartmentDetailsPage> {
 
     List<String> data = [];
     _controllers.forEach((controller) => data.add(controller.text));
-    await _repository.saveNotesDataInRow(_rowNumber, data);
+    await _repository.saveNotesDataById(widget.apartment.id, data);
 
     _setReadOnlyMode();
     showShortToast(context, 'Saved!');
@@ -108,7 +104,7 @@ class _ApartmentDetailsPageState extends State<ApartmentDetailsPage> {
 
   Future _initCurrentData() async {
     print('Fetching current data...');
-    _currentData = await _repository.fetchNotesDataFromRow(_rowNumber);
+    _currentData = await _repository.fetchNotesDataById(widget.apartment.id);
   }
 
   void _initControllers() {

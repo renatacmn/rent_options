@@ -1,4 +1,4 @@
-extension Getter<T> on List<T> {
+extension ListHelpers<T> on List<T> {
   T getOrNull(int index, {bool keepDash = false}) {
     try {
       var text = this[index];
@@ -10,9 +10,17 @@ extension Getter<T> on List<T> {
       return null;
     }
   }
+
+  bool isNullOrEmpty() {
+    return this == null || this.isEmpty;
+  }
 }
 
-extension ToInt on String {
+extension StringHelpers on String {
+  bool isNullOrEmpty() {
+    return this == null || this.isEmpty;
+  }
+
   int toInt() {
     try {
       return int.parse(this);
@@ -20,20 +28,12 @@ extension ToInt on String {
       return null;
     }
   }
-}
 
-extension ToDouble on String {
   double toDouble() {
     try {
       return double.parse(this);
     } catch (e) {
       return null;
     }
-  }
-}
-
-extension IsNullOrEmpty on String {
-  bool isNullOrEmpty() {
-    return this == null || this.isEmpty;
   }
 }

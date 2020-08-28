@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import 'features/apartment_list/apartment_list_page.dart';
 
-bool demoVersion = true;
+bool demoVersion = false;
 
 void main() async {
   runApp(MyApp());

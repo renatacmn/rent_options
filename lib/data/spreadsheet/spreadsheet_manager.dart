@@ -43,13 +43,24 @@ class SpreadsheetManager {
     return await worksheet.values.row(1);
   }
 
-  Future<List<String>> fetchNotesDataFromRow(int row) async {
+  Future<List<String>> fetchNotesDataById(String id) async {
     var worksheet = _spreadsheet.worksheetByTitle('Notes');
-    return await worksheet.values.row(row);
+    var idColumn = await worksheet.values.column(1);
+    var indexOfWantedRow = idColumn.indexOf(id);
+    if (indexOfWantedRow == -1) {
+      return Future.value([]);
+    }
+    return await worksheet.values.row(indexOfWantedRow + 1);
   }
 
-  Future saveNotesDataInRow(int rowNumber, List<String> row) async {
+  Future saveNotesDataById(String id, List<String> row) async {
     var worksheet = _spreadsheet.worksheetByTitle('Notes');
-    await worksheet.values.insertRow(rowNumber, row);
+    var idColumn = await worksheet.values.column(1);
+    var indexOfWantedRow = idColumn.indexOf(id);
+    if (indexOfWantedRow == -1) {
+      await worksheet.values.appendRow(row);
+    } else {
+      await worksheet.values.insertRow(indexOfWantedRow + 1, row);
+    }
   }
 }
