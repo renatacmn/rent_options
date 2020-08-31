@@ -25,6 +25,7 @@ class StatusIndicator extends StatelessWidget {
           padding: const EdgeInsets.only(top: 4),
           child: Text(
             status.notes,
+            textAlign: TextAlign.center,
             style: TextStyle(
               color: Colors.white,
               fontSize: 12,
