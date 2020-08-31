@@ -158,13 +158,25 @@ class _ApartmentDetailsPageState extends State<ApartmentDetailsPage> {
   }
 
   Widget _buildBody() {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      decoration: BoxDecoration(
-        gradient: Styles.backgroundGradient,
-      ),
-      clipBehavior: Clip.antiAliasWithSaveLayer,
-      child: TranslucentCard(child: _buildContent()),
+    return Stack(
+      children: [
+        Container(
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          decoration: BoxDecoration(
+            gradient: Styles.backgroundGradient,
+          ),
+          clipBehavior: Clip.antiAliasWithSaveLayer,
+          child: TranslucentCard(child: _buildContent()),
+        ),
+        _showSavingProgressIndicator
+            ? Container(
+                width: double.infinity,
+                height: double.infinity,
+                color: Colors.white54,
+                child: Center(child: CircularProgressIndicator()),
+              )
+            : Container(),
+      ],
     );
   }
 
@@ -227,16 +239,10 @@ class _ApartmentDetailsPageState extends State<ApartmentDetailsPage> {
       height: 50,
       width: double.infinity,
       child: RaisedButton(
-        child: _showSavingProgressIndicator
-            ? Center(
-                child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                ),
-              )
-            : Text(
-                'Save',
-                style: TextStyle(color: Colors.white),
-              ),
+        child: Text(
+          'Save',
+          style: TextStyle(color: Colors.white),
+        ),
         color: Colors.teal,
         onPressed: _onSavePressed,
       ),
