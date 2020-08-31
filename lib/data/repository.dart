@@ -51,6 +51,8 @@ class Repository {
         _notesSections.removeAt(0); // Remove ID
       }
     }
+//    print('>>>>> Notes sections:');
+//    print(_notesSections);
     return _notesSections;
   }
 
@@ -62,13 +64,21 @@ class Repository {
       }
       _notesMap[id] = notes; // Update map
     }
+//    print('>>>>> Current notes (id: $id):');
+//    print(_notesMap[id]);
     return _notesMap[id];
   }
 
   Future saveNotesDataById(String id, List<String> row) async {
-    row.insert(0, id); // Insert ID
-    _notesMap[id] = row; // Add to map
-    await SpreadsheetManager.instance.saveNotesDataById(id, row);
+    _notesMap[id] = row;
+    // Create list with the ID at the beginning
+    var listToSave = [id];
+    listToSave.addAll(row);
+    // Save list
+    await SpreadsheetManager.instance.saveNotesDataById(id, listToSave);
+
+//    print('>>>>> Saved notes (id: $id):');
+//    print(_notesMap[id]);
   }
 
   Future<List<String>> fetchApartmentImages(String id) async {
