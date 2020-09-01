@@ -151,9 +151,7 @@ class _ApartmentDetailsPageState extends State<ApartmentDetailsPage> {
         title: Text(widget.apartment.address),
         actions: [appBarAction],
       ),
-      body: _showLoadingProgressIndicator
-          ? Center(child: CircularProgressIndicator())
-          : _buildBody(),
+      body: _buildBody(),
     );
   }
 
@@ -166,7 +164,9 @@ class _ApartmentDetailsPageState extends State<ApartmentDetailsPage> {
             gradient: Styles.backgroundGradient,
           ),
           clipBehavior: Clip.antiAliasWithSaveLayer,
-          child: TranslucentCard(child: _buildContent()),
+          child: _showLoadingProgressIndicator
+              ? Center(child: CircularProgressIndicator())
+              : TranslucentCard(child: _buildContent()),
         ),
         _showSavingProgressIndicator
             ? Container(

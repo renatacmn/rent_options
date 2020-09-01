@@ -27,11 +27,13 @@ class _ImageCarouselState extends State<ImageCarousel> {
 
   @override
   Widget build(BuildContext context) {
+    var screenHeight = MediaQuery.of(context).size.height;
+
     List<Widget> items =
         widget.imageUrls.map((url) => _buildImageCard(url)).toList();
     return CarouselSlider(
       enlargeCenterPage: true,
-      height: 200,
+      height: screenHeight / 2,
       items: items,
       viewportFraction: 0.9,
       enableInfiniteScroll: false,

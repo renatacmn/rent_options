@@ -44,8 +44,7 @@ class ApartmentListItem extends StatelessWidget {
         right: 20,
         bottom: 8,
       ),
-      width: double.infinity,
-      height: 200,
+      height: 250,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(16)),
         boxShadow: [BoxShadow(blurRadius: 2, color: Colors.black26)],

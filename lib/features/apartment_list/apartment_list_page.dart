@@ -1,10 +1,12 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:rentoptions/data/repository.dart';
+import 'package:rentoptions/features/apartment_list/list_for_mobile.dart';
+import 'package:rentoptions/features/apartment_list/list_for_web.dart';
 import 'package:rentoptions/models/apartment.dart';
 import 'package:rentoptions/models/status.dart';
 import 'package:rentoptions/util/styles.dart';
 import 'package:rentoptions/util/toast_util.dart';
-import 'package:rentoptions/widgets/apartment_list_item.dart';
 
 class ApartmentListPage extends StatefulWidget {
   @override
@@ -101,13 +103,11 @@ class _ApartmentListPageState extends State<ApartmentListPage> {
     if (filteredApartmentList.isEmpty) {
       return _buildEmptyState();
     } else {
-      return ListView.builder(
-        physics: BouncingScrollPhysics(),
-        padding: const EdgeInsets.symmetric(vertical: 8),
-        itemCount: filteredApartmentList.length,
-        itemBuilder: (context, position) =>
-            ApartmentListItem(apartment: filteredApartmentList[position]),
-      );
+      if (kIsWeb) {
+        return ApartmentListForWeb(apartmentList: filteredApartmentList);
+      } else {
+        return ApartmentListForMobile(apartmentList: filteredApartmentList);
+      }
     }
   }
 
