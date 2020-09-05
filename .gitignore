@@ -42,3 +42,7 @@ app.*.map.json
 
 # Exceptions to above rules.
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
+
+# Google Cloud Services credentials
+rent-options-f096057f826c.json
+lib/data/spreadsheet/google_api_credentials.dart
