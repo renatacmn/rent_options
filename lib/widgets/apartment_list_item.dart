@@ -41,13 +41,15 @@ class ApartmentListItem extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(
         top: 16,
-        left: 20,
-        right: 20,
-        bottom: 8,
+        left: 16,
+        right: 16,
       ),
-      height: 250,
+      height: 220,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(16)),
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(8),
+          topRight: Radius.circular(8),
+        ),
         boxShadow: [BoxShadow(blurRadius: 2, color: Colors.black26)],
         image: DecorationImage(
           image: CachedNetworkImageProvider(apartment.imageUrl),
