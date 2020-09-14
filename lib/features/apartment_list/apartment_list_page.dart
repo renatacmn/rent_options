@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:rentoptions/data/repository.dart';
 import 'package:rentoptions/features/apartment_list/list_for_mobile.dart';
 import 'package:rentoptions/features/apartment_list/list_for_web.dart';
+import 'package:rentoptions/features/settings/settings_page.dart';
 import 'package:rentoptions/models/apartment.dart';
 import 'package:rentoptions/models/status.dart';
 import 'package:rentoptions/util/styles.dart';
-import 'package:rentoptions/util/toast_util.dart';
 
 class ApartmentListPage extends StatefulWidget {
   @override
@@ -19,8 +19,12 @@ class _ApartmentListPageState extends State<ApartmentListPage> {
   List<Apartment> _apartmentList = [];
   bool _loading = true;
 
-  void _showFilterOptions(BuildContext context) {
-    showShortToast(context, 'Filter');
+  void _goToSettings(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (context) {
+        return SettingsPage();
+      }),
+    );
   }
 
   @override
@@ -57,8 +61,8 @@ class _ApartmentListPageState extends State<ApartmentListPage> {
           title: Text('Rent Options'),
           actions: [
             IconButton(
-              icon: Icon(Icons.filter_list, color: Colors.white),
-              onPressed: () => _showFilterOptions(context),
+              icon: Icon(Icons.settings),
+              onPressed: () => _goToSettings(context),
             ),
           ],
           bottom: TabBar(
@@ -81,7 +85,7 @@ class _ApartmentListPageState extends State<ApartmentListPage> {
       },
       child: Container(
         decoration: BoxDecoration(
-          gradient: Styles.backgroundGradient,
+          gradient: Styles.getBackgroundGradient(),
         ),
         child: _loading
             ? Center(child: CircularProgressIndicator())

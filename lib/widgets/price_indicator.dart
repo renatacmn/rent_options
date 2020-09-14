@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rentoptions/util/styles.dart';
 
 class PriceIndicator extends StatelessWidget {
   final String price;
@@ -11,7 +12,7 @@ class PriceIndicator extends StatelessWidget {
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(4),
-        color: Colors.deepPurple,
+        color: Styles.getAccentColor(),
       ),
       child: Text(
         price,

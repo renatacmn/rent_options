@@ -1,16 +1,12 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:rentoptions/models/apartment.dart';
+import 'package:rentoptions/util/styles.dart';
 import 'package:rentoptions/util/url_util.dart';
 import 'package:rentoptions/widgets/price_indicator.dart';
 import 'package:rentoptions/widgets/status_indicator.dart';
 
 class ApartmentInfo extends StatelessWidget {
-  static const Color iconColor = Colors.teal;
-  static const Color furnishedIconColor = Colors.teal;
-  static const Color unfurnishedIconColor = Colors.redAccent;
-  static const Color textColor = Colors.black87;
-
   final Apartment apartment;
 
   const ApartmentInfo({this.apartment});
@@ -63,7 +59,6 @@ class ApartmentInfo extends StatelessWidget {
           TextSpan(
             text: '#${apartment.listOrder} - ',
             style: Theme.of(context).textTheme.subtitle1.copyWith(
-                  color: textColor,
                   fontWeight: FontWeight.bold,
                 ),
           ),
@@ -71,7 +66,6 @@ class ApartmentInfo extends StatelessWidget {
             text: '${apartment.address}',
             style: Theme.of(context).textTheme.subtitle1.copyWith(
                   decoration: TextDecoration.underline,
-                  color: textColor,
                   fontWeight: FontWeight.bold,
                 ),
             recognizer: TapGestureRecognizer()
@@ -86,17 +80,17 @@ class ApartmentInfo extends StatelessWidget {
     if (furnished) {
       return Row(
         children: [
-          Icon(Icons.check, color: furnishedIconColor),
+          Icon(Icons.check, color: Styles.furnishedIconColor),
           SizedBox(width: 4),
-          Text('Furnished', style: TextStyle(color: textColor)),
+          Text('Furnished'),
         ],
       );
     } else {
       return Row(
         children: [
-          Icon(Icons.close, color: unfurnishedIconColor),
+          Icon(Icons.close, color: Styles.unfurnishedIconColor),
           SizedBox(width: 4),
-          Text('Unfurnished', style: TextStyle(color: textColor)),
+          Text('Unfurnished'),
         ],
       );
     }
@@ -105,19 +99,13 @@ class ApartmentInfo extends StatelessWidget {
   Widget _buildSizeRow(Apartment apartment) {
     return Row(
       children: [
-        Icon(Icons.straighten, color: iconColor),
+        Icon(Icons.straighten),
         SizedBox(width: 8),
-        Text(
-          '${apartment.size} m²',
-          style: TextStyle(color: textColor),
-        ),
+        Text('${apartment.size} m²'),
         SizedBox(width: 24),
-        Icon(Icons.hotel, color: iconColor),
+        Icon(Icons.hotel),
         SizedBox(width: 8),
-        Text(
-          '${apartment.numRooms} rooms',
-          style: TextStyle(color: textColor),
-        ),
+        Text('${apartment.numRooms} rooms'),
       ],
     );
   }
@@ -135,12 +123,9 @@ class ApartmentInfo extends StatelessWidget {
       }
       return Row(
         children: [
-          Icon(Icons.directions_bus, color: iconColor),
+          Icon(Icons.directions_bus),
           SizedBox(width: 8),
-          Text(
-            text,
-            style: TextStyle(color: textColor),
-          ),
+          Text(text),
         ],
       );
     }
@@ -151,10 +136,7 @@ class ApartmentInfo extends StatelessWidget {
     return observations?.isNotEmpty == true
         ? Padding(
             padding: const EdgeInsets.only(top: 16),
-            child: Text(
-              'Obs: $observations',
-              style: TextStyle(color: textColor),
-            ),
+            child: Text('Obs: $observations'),
           )
         : Container();
   }

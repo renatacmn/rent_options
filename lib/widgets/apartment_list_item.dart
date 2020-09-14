@@ -27,6 +27,7 @@ class ApartmentListItem extends StatelessWidget {
 
   Widget _buildTranslucentCard() {
     return TranslucentCard(
+      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       child: Column(
         children: [
           _buildImage(),

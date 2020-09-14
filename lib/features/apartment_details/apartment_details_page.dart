@@ -161,12 +161,17 @@ class _ApartmentDetailsPageState extends State<ApartmentDetailsPage> {
         Container(
           padding: const EdgeInsets.symmetric(vertical: 8),
           decoration: BoxDecoration(
-            gradient: Styles.backgroundGradient,
+            gradient: Styles.getBackgroundGradient(),
           ),
-          clipBehavior: Clip.antiAliasWithSaveLayer,
           child: _showLoadingProgressIndicator
               ? Center(child: CircularProgressIndicator())
-              : TranslucentCard(child: _buildContent()),
+              : TranslucentCard(
+                  margin: const EdgeInsets.symmetric(
+                    vertical: 8,
+                    horizontal: 16,
+                  ),
+                  child: _buildContent(),
+                ),
         ),
         _showSavingProgressIndicator
             ? Container(
@@ -216,7 +221,7 @@ class _ApartmentDetailsPageState extends State<ApartmentDetailsPage> {
     List<Widget> children = [
       ApartmentInfo(apartment: widget.apartment),
       SizedBox(height: 24),
-      Divider(color: Colors.deepPurple),
+      Divider(color: Theme.of(context).accentColor),
     ];
 
     for (int i = 0; i < _sections.length; i++) {
