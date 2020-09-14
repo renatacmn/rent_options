@@ -10,6 +10,11 @@ class Styles {
 
   static List<CustomTheme> _themeList = [
     CustomTheme(
+      primaryColor: Color(0xffdc8875),
+      primaryColorDark: Color(0xffb5304c),
+      accentColor: Color(0xffb5304c),
+    ),
+    CustomTheme(
       primaryColor: Color(0xff8bb8e1),
       primaryColorDark: Color(0xff305f95),
       accentColor: Colors.indigo,
@@ -24,11 +29,6 @@ class Styles {
       primaryColor: Color(0xffaa7398),
       primaryColorDark: Color(0xff602d5f),
       accentColor: Colors.deepPurple,
-    ),
-    CustomTheme(
-      primaryColor: Color(0xffdc8875),
-      primaryColorDark: Color(0xffb5304c),
-      accentColor: Color(0xffb5304c),
     ),
     CustomTheme(
       primaryColor: Color(0xfffa9dbe),
